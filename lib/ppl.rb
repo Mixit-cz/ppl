@@ -1,3 +1,6 @@
+require "active_support"
+require "active_support/core_ext/hash/keys"
+require "active_support/core_ext/string/inflections"
 require "savon"
 
 require "ppl/configuration"

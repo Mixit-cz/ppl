@@ -11,6 +11,10 @@ RSpec.describe Ppl::Configuration do
     it "returns the correct username" do
       expect(Ppl.configuration.username).to eq(ENV["PPL_USERNAME"])
     end
+
+    it "returns the correct customer_id" do
+      expect(Ppl.configuration.customer_id).to eq(ENV["PPL_CUSTOMER_ID"])
+    end
   end
 
   context "without configuration block" do
@@ -24,6 +28,10 @@ RSpec.describe Ppl::Configuration do
 
     it "raises configuration error for missing username" do
       expect { Ppl.configuration.username }.to raise_error(Ppl::Errors::Configuration)
+    end
+
+    it "raises configuration error for missing customer_id" do
+      expect { Ppl.configuration.customer_id }.to raise_error(Ppl::Errors::Configuration)
     end
   end
 end

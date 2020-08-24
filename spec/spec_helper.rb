@@ -3,6 +3,7 @@ require "ppl"
 
 ENV["PPL_PASSWORD"] ||= ""
 ENV["PPL_USERNAME"] ||= ""
+ENV["PPL_CUSTOMER_ID"] ||= ""
 ENV["PPL_WSDL_URL"] ||= "https://myapi.ppl.cz/MyApi.svc?singleWsdl"
 
 RSpec.configure do |config|
@@ -20,6 +21,7 @@ RSpec.configure do |config|
     Ppl.configure do |config|
       config.password = ENV["PPL_PASSWORD"]
       config.username = ENV["PPL_USERNAME"]
+      config.customer_id = ENV["PPL_CUSTOMER_ID"]
       config.wsdl_url = ENV["PPL_WSDL_URL"]
     end
   end
