@@ -1,7 +1,9 @@
 require "active_support"
 require "active_support/core_ext/hash/keys"
+require "active_support/core_ext/numeric/time"
 require "active_support/core_ext/string/inflections"
 require "savon"
+require "zache"
 
 require "ppl/configuration"
 require "ppl/errors"

@@ -4,6 +4,7 @@ PATH
     ppl (0.1.0)
       activesupport
       savon (~> 2.12)
+      zache (~> 0.12)
 
 GEM
   remote: https://rubygems.org/
@@ -62,6 +63,7 @@ GEM
     wasabi (3.5.0)
       httpi (~> 2.0)
       nokogiri (>= 1.4.2)
+    zache (0.12.0)
     zeitwerk (2.4.0)
 
 PLATFORMS
