@@ -6,6 +6,8 @@ require "savon"
 require "ppl/configuration"
 require "ppl/errors"
 require "ppl/client"
+require "ppl/package"
+require "ppl/zpl_label"
 require "ppl/version"
 
 module Ppl
