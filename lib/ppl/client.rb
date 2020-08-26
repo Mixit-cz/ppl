@@ -36,11 +36,39 @@ module Ppl
           password: Ppl.configuration.password,
           user_name: Ppl.configuration.username
         }
-      )&.dig(:login_response, :login_result, :auth_token)
+      )&.dig(:auth_token)
+    end
+
+    %i(get_parcel_shops get_cities_routing get_packages).each do |m|
+      define_method(m) do |**filter|
+        operation(m, filter: filter)&.dig(:result_data)
+      end
+    end
+
+    def create_orders(orders)
+      operation(:create_orders, orders: orders.map(&:to_xml))&.dig(:result_data)
     end
 
     def method_missing(m, *args, &block)
       operation(m, *args)
+    end
+
+    private
+
+    def auth_token
+      @cache.get(:auth_token, lifetime: 30 * 60) { login }
+    end
+
+    def handle_response(response, action)
+      path = ["#{action}_response".to_sym, "#{action}_result".to_sym]
+
+      if BUSINESS_METHODS.include?(action)
+        save_auth_token(response.body.dig(*(path + [:auth_token])))
+      end
+
+      response.body.dig(*path)
+    rescue Savon::Error => e
+      raise Ppl::Error, e.message
     end
 
     def operation(action, **params)
@@ -61,24 +89,6 @@ module Ppl
       )
 
       handle_response(response, action)
-    end
-
-    private
-
-    def auth_token
-      @cache.get(:auth_token, lifetime: 30 * 60) { login }
-    end
-
-    def handle_response(response, action)
-      path = ["#{action}_response".to_sym, "#{action}_result".to_sym]
-
-      if BUSINESS_METHODS.include?(action)
-        save_auth_token(response.dig(path + :auth_token))
-      end
-
-      response.dig(path)
-    rescue Savon::Error => e
-      raise Ppl::Error, e.message
     end
 
     def process_params(params)

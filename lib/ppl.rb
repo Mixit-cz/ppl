@@ -10,6 +10,7 @@ require "ppl/errors"
 require "ppl/client"
 require "ppl/package"
 require "ppl/zpl_label"
+require "ppl/structs"
 require "ppl/version"
 
 module Ppl
