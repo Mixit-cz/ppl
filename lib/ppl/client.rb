@@ -49,6 +49,14 @@ module Ppl
       operation(:create_orders, orders: orders.map(&:to_xml))&.dig(:result_data)
     end
 
+    def create_packages(packages, customer_unique_import_id = nil)
+      operation(
+        :create_packages,
+        customer_unique_import_id: customer_unique_import_id,
+        packages: packages.map(&:to_xml)
+      )&.dig(:result_data)
+    end
+
     def method_missing(m, *args, &block)
       operation(m, *args)
     end
