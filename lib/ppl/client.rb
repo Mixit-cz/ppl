@@ -49,6 +49,10 @@ module Ppl
       operation(:create_orders, orders: orders.map(&:to_xml))&.dig(:result_data)
     end
 
+    def create_pickup_orders(pickup_orders)
+      operation(:create_pickup_orders, orders: pickup_orders.map(&:to_xml))&.dig(:result_data)
+    end
+
     def create_packages(packages, customer_unique_import_id = nil)
       operation(
         :create_packages,

@@ -140,6 +140,77 @@ order = Ppl::Order.new(packages_count: 1, order_reference_id: order_reference_id
 client.create_orders([order])
 ```
 
+### Create pickup orders
+
+```ruby
+client = Ppl::Client.new
+pickup_order = Ppl::PickupOrder.new(packages_count: 1, order_reference_id: order_reference_id, send_date: "2020-09-01", sender: sender)
+client.create_pickup_orders([pickup_order])
+```
+
+### Get cities routing
+
+```ruby
+client = Ppl::Client.new
+client.get_cities_routing(country_code: "CZ")
+# => {:my_api_city_routing=>
+#  [{:changed=>#<DateTime: 2018-09-06T14:04:34+00:00 ((2458368j,50674s,343000000n),+0s,2299161j)>,
+#    :city=>"Depo02",
+#    :country_code=>"CZ ",
+#    :created=>#<DateTime: 2018-02-02T12:35:23+00:00 ((2458152j,45323s,70000000n),+0s,2299161j)>,
+#    :depo_code=>"02",
+#    :highlighted=>false,
+#    :post=>"České Budějovice",
+#    :region=>nil,
+#    :reject=>false,
+#    :route_code=>"02899",
+#    :services=>
+#     {:my_api_city_route_svc=>
+#       [{:code=>"SAT", :value=>true}, {:code=>"ED", :value=>false}, {:code=>"MD", :value=>false}]},
+#    :street=>nil,
+#    :zip_code=>"02999"},…
+```
+
+### Get packages
+
+```ruby
+client = Ppl::Client.new
+client.get_packages(date_from: "2020-08-30", date_to: "2020-09-01")
+# => {:my_api_package_out=>
+#  [{:back_date=>nil,
+#    :back_pack_number=>nil,
+#    :back_pack_number_active=>nil,
+#    :backed_doc=>nil,
+#    :deliv_date=>#<DateTime: 2020-xxxxx+00:00>,
+#    :deliv_person=>"xxx",
+#    :delivery_to_ktm=>false,
+#    :dep_in_code=>"01",
+#    :dep_in_name=>"Depo Jažlovice",
+#    :dep_out_code=>"01",
+#    :dep_out_name=>"Depo Jažlovice",
+#    :depo_code=>nil,…
+```
+
+### ZPL labels
+
+```ruby
+client = Ppl::Client.new
+recipient = Ppl::Address.new(name: "John Doe", email: "john.doe@example.com", city: "Praha", country: "CZ", street: "Ohradní 65", phone: "777123456", zip_code: "14000")
+sender = Ppl::Address.new(name: "Mixit s.r.o.", email: "mixit@mix.it", city: "Praha", country: "CZ", street: "Ohradní 65", phone: "777123456", zip_code: "14000")
+
+# Generate package number:
+package_number_info = Ppl::PackageNumberInfo.new(series_number_id: "114", product_type: Ppl::Product::PPL_PARCEL_CZ_PRIVATE, depo_code: Ppl::Depo::CODE_01)
+package_number = client.generate_package_number(package_number_info)
+# => "40151140000"
+
+payment_info = Ppl::PaymentInfo.new(cash_on_delivery_price: 300, cash_on_delivery_currency: "CZK")
+
+package = Ppl::Package.new(package_number: package_number, package_product_type: Ppl::Product::PPL_PARCEL_CZ_PRIVATE, weight: 1.44, note: "Test", recipient: recipient, sender: sender, package_position: "1", payment_info: payment_info, package_count: 1)
+zpl_label = Ppl::ZplLabel.new([package])
+zpl_label.raw_zpl
+# => => "^XA^MUM^LH2,2^FS^LL^PW^PON^FO47,49^LRY^GB48,80,0.3,B,0^FS^FO13,49^LRY^GB28,80,0.3,B,0^FS^FO4.7,114^LRY^GB6,15,0.3,B,0^FS^FO47.2,107.7^LRY^GB21,21,10.5,B,0^FS^FO88,7^GFA,2520,2520,9…
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

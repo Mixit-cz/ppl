@@ -1,22 +1,28 @@
 module Ppl
   Package = Struct.new(
     :package_number,
-    :cash_on_delivery_price,
-    :cash_on_delivery_currency,
     :sender,
     :recipient,
     :package_position,
     :package_count,
-    :package_number_checksum,
     :package_product_type,
+    :depo_code,
+    :special_delivery,
+    :payment_info,
+    :pallet_info,
+    :external_numbers,
+    :weighted_package_info,
+    :package_services,
+    :flags,
+    :weight,
+    :note,
     keyword_init: true
   ) do
     def initialize(*args)
       super(*args)
 
       %i(
-        order_reference_id package_product_type packages_count send_date
-        recipient
+        package_number package_product_type package_count recipient
       ).each do |attribute|
         unless self[attribute].present?
           raise Ppl::Errors::AttributeRequired, "#{attribute} is required."
@@ -40,12 +46,30 @@ module Ppl
       end
     end
 
+    def cod?
+      Product::CASH_ON_DELIVERY.include?(package_product_type)
+    end
+
+    def evening_delivery?
+      self[:package_services] && self[:package_services].include?("ED")
+    end
+
     def package_services
       Array(self[:package_services]).map do |service|
         {
           "SvcCode" => service
         }
       end
+    end
+
+    def package_number_checksum
+      pn = package_number.chars.map(&:to_i)
+      odd = pn.select.with_index { |_, i| i.odd? }.sum
+      even = pn.select.with_index { |_, i| i.even? }.sum
+      odd *= 3
+      odd += even
+
+      (10 - odd.to_s[-1].to_i) % 10
     end
 
     def to_xml
