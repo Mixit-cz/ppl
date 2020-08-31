@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "PPL MyApi wrapper"
   spec.description   = "PPL MyApi wrapper"
-  spec.homepage      = "https://github.com/michalgritzbach/ppl"
+  spec.homepage      = "https://github.com/Mixit-cz/ppl"
   spec.license       = "MIT"
 
   # Specify which files should be added to the gem when it is released.

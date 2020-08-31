@@ -57,6 +57,29 @@ module Ppl
       )&.dig(:result_data)
     end
 
+    def get_sprint_routes
+      super.dig(:result_data, :my_api_sprint_routes)
+    end
+
+    def get_number_range(number_ranges)
+      operation(:get_number_range, number_ranges: number_ranges.map(&:to_xml))&.dig(:result_data)
+    end
+
+    def generate_package_number(package_number_info)
+      identifier = [
+        package_number_info.product_type_identifier,
+        package_number_info.depo_code,
+        package_number_info.cod? ? "9" : "5",
+        package_number_info.series_number_id.ljust(7, "0")
+      ].join
+
+      unless identifier.length == 11
+        raise Errors::Error, "Failed to generate correct package ID: #{identifier}"
+      end
+
+      identifier
+    end
+
     def method_missing(m, *args, &block)
       operation(m, *args)
     end

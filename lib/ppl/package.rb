@@ -15,7 +15,7 @@ module Ppl
       super(*args)
 
       %i(
-        order_reference_id package_product_type packages_count send_date sender
+        order_reference_id package_product_type packages_count send_date
         recipient
       ).each do |attribute|
         unless self[attribute].present?
@@ -23,7 +23,7 @@ module Ppl
         end
       end
 
-      unless sender.is_a?(Ppl::Address)
+      if sender.present? && !sender.is_a?(Ppl::Address)
         raise Ppl::Errors::Type, "Sender has to be an Address."
       end
 
@@ -56,7 +56,7 @@ module Ppl
           "Weight" => weight,
           "Note" => note,
           "DepoCode" => depo_code,
-          "Sender" => sender.to_xml,
+          "Sender" => sender&.to_xml,
           "Recipient" => recipient.to_xml,
           "SpecDelivery" => special_delivery&.to_xml,
           "PaymentInfo" => payment_info&.to_xml,
