@@ -7,11 +7,21 @@ module Ppl
 
     attr_accessor :client
 
-    def initialize
+    def initialize(customer_id, password, username, wsdl_url)
+      @customer_id = customer_id
+      @customer_password = password
+      @customer_username = username
+      @wsdl_url = wsdl_url
+
+      raise Errors::Configuration, "WSDL URL missing!" unless @wsdl_url
+      raise Errors::Configuration, "Customer ID missing!" unless @customer_id
+      raise Errors::Configuration, "Username missing!" unless @customer_username
+      raise Errors::Configuration, "Password missing!" unless @customer_password
+
       @cache = Zache.new
       @client = Savon.client(
-        wsdl: Ppl.configuration.wsdl_url,
-        log: Ppl.configuration.debug,
+        wsdl: @wsdl_url,
+        log: ENV['PPL_DEBUG'] ||= true,
         log_level: :debug,
         pretty_print_xml: true,
         soap_version: 1,
@@ -25,16 +35,16 @@ module Ppl
     end
 
     def is_healthy
-      operation(:is_healtly, {})
+      operation(:is_healthy, {})
     end
 
     def login
       operation(
         :login,
         auth: {
-          cust_id: Ppl.configuration.customer_id,
-          password: Ppl.configuration.password,
-          user_name: Ppl.configuration.username
+          cust_id: @customer_id,
+          password: @customer_password,
+          user_name: @customer_username
         }
       )&.dig(:auth_token)
     end
