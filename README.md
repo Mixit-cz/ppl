@@ -20,22 +20,32 @@ Or install it yourself as:
 
 ## Configuration
 
-Create an initializer in `config/initializers/ppl.rb` with following content:
+Add these environment variables into .rbenv-vars file.
 
-```ruby
-Ppl.configure do |config|
-  config.customer_id = "Your customer ID (only digits)"
-  config.username = "Your API username"
-  config.password = "Your API password"
-end
 ```
+PPL_CUSTOMER_ID
+PPL_CUSTOMER_PASSWORD
+PPL_CUSTOMER_USERNAME
+PPL_WSDL_URL=https://myapi.ppl.cz/MyApi.svc?singleWsdl
+```
+
+and optional parameter (default is set to true)
+
+`PPL_DEBUG`
+
+and provide valid information
 
 ## Usage
 
 ### Check API status
 
 ```ruby
-client = Ppl::Client.new
+client = Ppl::Client.new(
+  ENV['PPL_CUSTOMER_ID'], 
+  ENV['PPL_CUSTOMER_PASSWORD'], 
+  ENV['PPL_CUSTOMER_USERNAME'], 
+  ENV['PPL_WSDL_URL']
+  )
 client.is_healthy
 # => "Healthy"
 ```
