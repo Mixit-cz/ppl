@@ -12,6 +12,8 @@ module Ppl
       @customer_password = password
       @customer_username = username
       @wsdl_url = wsdl_url
+      @is_debug = true
+      ENV['PPL_DEBUG'] == "false" ? @is_debug = false : @is_debug = true
 
       raise Errors::Configuration, "WSDL URL missing!" unless @wsdl_url
       raise Errors::Configuration, "Customer ID missing!" unless @customer_id
@@ -21,7 +23,7 @@ module Ppl
       @cache = Zache.new
       @client = Savon.client(
         wsdl: @wsdl_url,
-        log: ENV['PPL_DEBUG'] ||= true,
+        log: is_debug,
         log_level: :debug,
         pretty_print_xml: true,
         soap_version: 1,
@@ -92,6 +94,10 @@ module Ppl
       end
 
       identifier
+    end
+
+    def generate_cod_package_number(package_number_info)
+
     end
 
     def method_missing(m, *args, &block)

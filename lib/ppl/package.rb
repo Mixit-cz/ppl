@@ -6,6 +6,7 @@ module Ppl
     :package_position,
     :package_count,
     :package_product_type,
+    :package_external_number,
     :depo_code,
     :special_delivery,
     :payment_info,
@@ -22,7 +23,7 @@ module Ppl
       super(*args)
 
       %i(
-        package_number package_product_type package_count recipient
+        package_number package_external_number package_product_type package_count recipient
       ).each do |attribute|
         unless self[attribute].present?
           raise Ppl::Errors::AttributeRequired, "#{attribute} is required."
@@ -85,7 +86,10 @@ module Ppl
           "SpecDelivery" => special_delivery&.to_xml,
           "PaymentInfo" => payment_info&.to_xml,
           "PackageExtNums" => {
-            "MyApiPackageExtNum" => package_external_numbers&.map(&:to_xml)
+            "MyApiPackageExtNum" => {
+              "Code" => "CUST",
+              "ExtNumber" => package_external_number
+            }
           },
           "PackageServices" => {
             "MyApiPackageInServices" => package_services
