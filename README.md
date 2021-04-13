@@ -221,7 +221,7 @@ zpl_label.raw_zpl
 # => => "^XA^MUM^LH2,2^FS^LL^PW^PON^FO47,49^LRY^GB48,80,0.3,B,0^FS^FO13,49^LRY^GB28,80,0.3,B,0^FS^FO4.7,114^LRY^GB6,15,0.3,B,0^FS^FO47.2,107.7^LRY^GB21,21,10.5,B,0^FS^FO88,7^GFA,2520,2520,9…
 ```
 
-## Cash on delivery
+## Connect to foreign countries COD
 
 For COD packages, we need to specify more info:
 
@@ -234,18 +234,21 @@ client = Ppl::Client.new(
   )
 
 recipient = Ppl::Address.new(name: "John Doe", email: "john.doe@example.com", city: "Praha", country: "CZ", street: "Ohradní 65", phone: "777123456", zip_code: "14000")
-sender = Ppl::Address.new(name: "Mixit s.r.o.", email: "mixit@mix.it", city: "Praha", country: "CZ", street: "Ohradní 65", phone: "777123456", zip_code: "14000")
+sender = Ppl::Address.new(name: "Mixit s.r.o.", email: "mixit@mix.it", city: "Praha", country: "PL", street: "Ohradní 65", phone: "777123456", zip_code: "14000")
 
 # Generate package number between 20191243574 and 20191256073
 package_number_info = Ppl::PackageNumberInfo.new(series_number_id: "114", product_type: Ppl::Product::CASH_ON_DELIVERY, depo_code: Ppl::Depo::CODE_01)
 package_number = "20191243574"
 
-payment_info = Ppl::PaymentInfo.new(cash_on_delivery_price: 300, cash_on_delivery_currency: "CZK", cash_on_delivery_variable_symbol: 123456)
+payment_info = Ppl::PaymentInfo.new(cash_on_delivery_price: 300, cash_on_delivery_currency: "PLN", cash_on_delivery_variable_symbol: 123456)
+ext_num = Ppl::ExternalNumber.new(code: "CUST", external_number: 29032043)
 
 package = Ppl::Package.new(package_number: package_number, package_product_type: Ppl::Product::CASH_ON_DELIVERY, weight: 1.44, note: "Test", recipient: recipient, sender: sender, package_position: "1", payment_info: payment_info, package_count: 1, package_external_number: 123456)
 
 client.create_packages([package])
 ```
+
+## Connect to foreign countries
 
 ## Development
 

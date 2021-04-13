@@ -86,10 +86,7 @@ module Ppl
           "SpecDelivery" => special_delivery&.to_xml,
           "PaymentInfo" => payment_info&.to_xml,
           "PackageExtNums" => {
-            "MyApiPackageExtNum" => {
-              "Code" => "CUST",
-              "ExtNumber" => package_external_number
-            }
+            "MyApiPackageExtNum" => package_external_number.to_xml
           },
           "PackageServices" => {
             "MyApiPackageInServices" => package_services
