@@ -233,17 +233,16 @@ client = Ppl::Client.new(
   ENV['PPL_WSDL_URL']
   )
 
-recipient = Ppl::Address.new(name: "John Doe", email: "john.doe@example.com", city: "Praha", country: "CZ", street: "Ohradní 65", phone: "777123456", zip_code: "14000")
-sender = Ppl::Address.new(name: "Mixit s.r.o.", email: "mixit@mix.it", city: "Praha", country: "PL", street: "Ohradní 65", phone: "777123456", zip_code: "14000")
+recipient = Ppl::Address.new(name: "John Doe", email: "john.doe@example.com", city: "Praha", country: "PL", street: "Ohradní 65", phone: "777123456", zip_code: "14000")
+sender = Ppl::Address.new(name: "Mixit s.r.o.", email: "mixit@mix.it", city: "Praha", country: "CZ", street: "Ohradní 65", phone: "777123456", zip_code: "14000")
 
-# Generate package number between 20191243574 and 20191256073
-package_number_info = Ppl::PackageNumberInfo.new(series_number_id: "114", product_type: Ppl::Product::CASH_ON_DELIVERY, depo_code: Ppl::Depo::CODE_01)
+package_number_info = Ppl::PackageNumberInfo.new(series_number_id: "114", product_type: Ppl::Product::PPL_PARCEL_CONNECT_COD, depo_code: Ppl::Depo::CODE_01)
 package_number = "20191243574"
 
 payment_info = Ppl::PaymentInfo.new(cash_on_delivery_price: 300, cash_on_delivery_currency: "PLN", cash_on_delivery_variable_symbol: 123456)
 ext_num = Ppl::ExternalNumber.new(code: "CUST", external_number: 29032043)
 
-package = Ppl::Package.new(package_number: package_number, package_product_type: Ppl::Product::CASH_ON_DELIVERY, weight: 1.44, note: "Test", recipient: recipient, sender: sender, package_position: "1", payment_info: payment_info, package_count: 1, package_external_number: 123456)
+package = Ppl::Package.new(package_number: package_number, package_product_type: Ppl::Product::PPL_PARCEL_CONNECT_COD, weight: 1.44, note: "Test", recipient: recipient, sender: sender, package_position: "1", payment_info: payment_info, package_count: 1, package_external_number: ext_num)
 
 client.create_packages([package])
 ```

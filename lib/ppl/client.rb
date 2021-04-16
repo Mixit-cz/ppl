@@ -23,7 +23,7 @@ module Ppl
       @cache = Zache.new
       @client = Savon.client(
         wsdl: @wsdl_url,
-        log: is_debug,
+        log: @is_debug,
         log_level: :debug,
         pretty_print_xml: true,
         soap_version: 1,
